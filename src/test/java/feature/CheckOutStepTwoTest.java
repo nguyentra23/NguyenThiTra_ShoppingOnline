@@ -45,7 +45,7 @@ public class CheckOutStepTwoTest extends Hook {
         String pageTitle = WaitUtils.getText(driver, CheckOutStepTwoPageUI.TITLE);
         Assert.assertEquals(pageTitle, "Checkout: Overview", "Page title should be 'Checkout: Overview'");
 
-        // Kiểm tra badge giỏ hàng (dùng Action)
+        // Kiểm tra badge giỏ hàng
         Assert.assertEquals(checkOutStepTwoAction.getCartItemCount(), "2", "Cart badge should still show 2");
 
         // Kiểm tra số lượng sản phẩm

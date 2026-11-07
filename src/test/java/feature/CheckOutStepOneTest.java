@@ -152,5 +152,164 @@ public class CheckOutStepOneTest extends Hook {
         Assert.assertEquals(inventoryAction.getCartItemCount(), "2","Cart should still have 2 items");
     }
 
+    @Test
+    public void Checkout08_FirstNameWithOnlySpaces() {
+        ExtentReportManager.createTest("Checkout08_FirstNameWithOnlySpaces");
+
+        // Nhập First Name chỉ toàn dấu cách
+        checkOutStepOneAction.completeCheckoutInfo("   ", "Tra", "12345");
+        WaitUtils.sleep(1);
+
+        // SauceDemo coi dấu cách là rỗng → hiển thị lỗi
+        Assert.assertTrue(checkOutStepOneAction.isErrorMessageDisplayed(),
+                "Error message should be displayed when First Name contains only spaces");
+        Assert.assertTrue(checkOutStepOneAction.getErrorMessage().contains("First Name is required"),
+                "Error should say First Name is required");
+    }
+
+    @Test
+    public void Checkout09_FirstNameWithOnlyNumbers() {
+        ExtentReportManager.createTest("Checkout09_FirstNameWithOnlyNumbers");
+
+        // Nhập First Name toàn số
+        checkOutStepOneAction.completeCheckoutInfo("123456", "Tra", "12345");
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts numeric First Name (no format validation)");
+    }
+
+    @Test
+    public void Checkout10_FirstNameWithOneCharacter() {
+        ExtentReportManager.createTest("Checkout10_FirstNameWithOneCharacter");
+
+        // Nhập First Name chỉ 1 ký tự
+        checkOutStepOneAction.completeCheckoutInfo("A", "Tra", "12345");
+        WaitUtils.sleep(1);
+
+        // Chấp nhận 1 ký tự
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts single character First Name");
+    }
+
+    @Test
+    public void Checkout11_FirstNameWithSpecialCharacters() {
+        ExtentReportManager.createTest("Checkout11_FirstNameWithSpecialCharacters");
+
+        // Nhập First Name có ký tự đặc biệt
+        checkOutStepOneAction.completeCheckoutInfo("@#$%^&*", "Tra", "12345");
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts special characters in First Name");
+    }
+
+    @Test
+    public void Checkout12_LastNameWithOnlySpaces() {
+        ExtentReportManager.createTest("Checkout12_LastNameWithOnlySpaces");
+
+        // Nhập Last Name chỉ toàn dấu cách
+        checkOutStepOneAction.completeCheckoutInfo("Nguyen", "    ", "12345");
+        WaitUtils.sleep(1);
+
+        // Lỗi vì dấu cách được coi là rỗng
+        Assert.assertTrue(checkOutStepOneAction.isErrorMessageDisplayed(),
+                "Error message should be displayed when Last Name contains only spaces");
+        Assert.assertTrue(checkOutStepOneAction.getErrorMessage().contains("Last Name is required"),
+                "Error should say Last Name is required");
+    }
+
+    @Test
+    public void Checkout13_LastNameWithOnlyNumbers() {
+        ExtentReportManager.createTest("Checkout13_LastNameWithOnlyNumbers");
+
+        // Nhập First Name toàn số
+        checkOutStepOneAction.completeCheckoutInfo("Tra", "12344", "12345");
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts numeric Last Name ");
+    }
+
+    @Test
+    public void Checkout14_lastNameWithOneCharacter() {
+        ExtentReportManager.createTest("Checkout14_lastNameWithOneCharacter");
+
+        // Nhập First Name chỉ 1 ký tự
+        checkOutStepOneAction.completeCheckoutInfo("Tra", "T", "12345");
+        WaitUtils.sleep(1);
+
+        // Chấp nhận 1 ký tự
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts single character Last Name");
+    }
+
+    @Test
+    public void Checkout15_LastNameWithSpecialCharacters() {
+        ExtentReportManager.createTest("Checkout15_LastNameWithSpecialCharacters");
+
+        // Nhập First Name có ký tự đặc biệt
+        checkOutStepOneAction.completeCheckoutInfo("Tra", "@#$%^&*", "12345");
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts special characters in Last Name");
+    }
+
+
+    @Test
+    public void Checkout16_PostalCodeWithOnlySpaces() {
+        ExtentReportManager.createTest("Checkout16_PostalCodeWithOnlySpaces");
+
+        // Nhập Postal Code chỉ toàn dấu cách
+        checkOutStepOneAction.completeCheckoutInfo("Nguyen", "Tra", "     ");
+        WaitUtils.sleep(1);
+
+        // SauceDemo coi dấu cách là rỗng → lỗi
+        Assert.assertTrue(checkOutStepOneAction.isErrorMessageDisplayed(),
+                "Error message should be displayed when Postal Code contains only spaces");
+        Assert.assertTrue(checkOutStepOneAction.getErrorMessage().contains("Postal Code is required"),
+                "Error should say Postal Code is required");
+    }
+
+    @Test
+    public void Checkout17_PostalCodeWithOnlyLetters() {
+        ExtentReportManager.createTest("Checkout17_PostalCodeWithOnlyLetters");
+
+        // Nhập Postal Code toàn chữ
+        checkOutStepOneAction.completeCheckoutInfo("Nguyen", "Tra", "ABCDE");
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts alphabetic Postal Code");
+    }
+
+    @Test
+    public void Checkout18_PostalCodeWithSpecialCharacters() {
+        ExtentReportManager.createTest("Checkout18_PostalCodeWithSpecialCharacters");
+
+        // Nhập Postal Code có ký tự đặc biệt
+        checkOutStepOneAction.completeCheckoutInfo("Nguyen", "Tra", "!@#$%");
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("checkout-step-two.html"),
+                "SauceDemo accepts special characters in Postal Code");
+    }
+
+    @Test
+    public void Checkout19_AllFieldsWithOnlySpaces() {
+        ExtentReportManager.createTest("Checkout19_AllFieldsWithOnlySpaces");
+
+        // Nhập tất cả các ô toàn dấu cách
+        checkOutStepOneAction.completeCheckoutInfo("   ", "   ", "   ");
+        WaitUtils.sleep(1);
+
+        // Lỗi First Name
+        Assert.assertTrue(checkOutStepOneAction.isErrorMessageDisplayed(),
+                "Error message should be displayed when all fields contain only spaces");
+        Assert.assertTrue(checkOutStepOneAction.getErrorMessage().contains("First Name is required"),
+                "Error should indicate First Name is required first");
+    }
+
 
 }

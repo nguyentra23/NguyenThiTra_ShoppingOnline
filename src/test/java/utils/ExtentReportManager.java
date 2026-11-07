@@ -6,7 +6,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import com.aventstack.extentreports.Status;
 
-public class ExtentReportManager {
+public class ExtentReportManager implements org.testng.ITestListener{
     private static ExtentReports extent;
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
@@ -84,6 +84,7 @@ public class ExtentReportManager {
             getTest().log(Status.INFO, message).addScreenCaptureFromBase64String(base64Screenshot);
         }
     }
+
 
     // Ghi report ra file
     public static void flushReport() {

@@ -49,6 +49,18 @@ public class InventoryAction {
         WaitUtils.click(driver, InventoryPageUI.SHOPPING_CART_LINK);
     }
 
+    // Chuyển đến trang chi tiết sản phẩm theo tên
+    public void goToProductDetailByName(String productName) {
+        String xpath = String.format(InventoryPageUI.PRODUCT_NAME_BY_PRODUCT, productName);
+        WaitUtils.click(driver, By.xpath(xpath));
+        WaitUtils.sleep(1);
+    }
+//    public void addToCartByProductName(String productName) {
+//        String xpath = String.format(InventoryPageUI.ADD_TO_CART_SPECIFIC, productName);
+//        WaitUtils.click(driver, By.xpath(xpath));
+//        WaitUtils.sleep(1);
+//    }
+
     // Lấy danh sách tất cả tên sản phẩm
     public List<String> getAllProductNames() {
         return driver.findElements(InventoryPageUI.PRODUCT_NAMES).stream().map(WebElement::getText).collect(Collectors.toList());

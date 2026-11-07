@@ -25,5 +25,6 @@ public class CartPageUI {
     // Dynamic XPath - Remove button trong cart (đúng)
     public static final String REMOVE_BUTTON_CART = "//div[@class='cart_item' and contains(.,'%s')]//button[contains(@id,'remove')]";
 
-
+    public static final String PRODUCT_NAME_BY_PRODUCT ="//div[contains(@class,'inventory_item_name') and contains(.,'%s')]";
 }
+

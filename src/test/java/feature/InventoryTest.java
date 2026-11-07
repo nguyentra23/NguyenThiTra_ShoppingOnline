@@ -335,5 +335,160 @@ public class InventoryTest extends Hook {
         Assert.assertTrue(loginButton.isDisplayed(), "Login button should be displayed");
     }
 
+    @Test
+    public void Inventory13_ClickAboutFromInventory() {
+        ExtentReportManager.createTest("Inventory13_ClickAboutFromInventory");
+
+        // Mở burger menu
+        inventoryAction.openMenu();
+        WaitUtils.sleep(1);
+
+        // kiểm tra URL trước khi click vào about
+        String inventoryUrl = driver.getCurrentUrl();
+        Assert.assertTrue(inventoryUrl.contains("inventory.html"),
+                "Should be on inventory page before clicking About");
+
+        // Click vào link About
+        WaitUtils.click(driver, InventoryPageUI.ABOUT_LINK);
+        WaitUtils.sleep(2);
+
+        // Kiểm tra URL đã chuyển sang trang About của Sauce Labs
+        String currentUrl = driver.getCurrentUrl();
+        Assert.assertTrue(currentUrl.contains("saucelabs.com"),
+                "Should navigate to Sauce Labs About page. Actual URL: " + currentUrl);
+
+    }
+
+    @Test
+    public void Inventory14_AddAndRemoveMultipleProductsSequentially() {
+        ExtentReportManager.createTest("Inventory14_AddAndRemoveMultipleProductsSequentially");
+
+        String product1 = "Sauce Labs Backpack";
+        String product2 = "Sauce Labs Bike Light";
+
+        // Thêm 2 sản phẩm
+        inventoryAction.addToCartByProductName(product1);
+        inventoryAction.addToCartByProductName(product2);
+        WaitUtils.sleep(1);
+        //Kiểm tra số lượng sản phẩm trong giỏ hàng (hiển thị trên bagde)
+        Assert.assertEquals(inventoryAction.getCartItemCount(), "2", "Should have 2 items");
+
+        // Xóa 1 sản phẩm
+        inventoryAction.removeFromCartByProductName(product1);
+        WaitUtils.sleep(1);
+        //Kiểm tra số lượng sản phẩm trong giỏ hàng (hiển thị trên bagde)
+        Assert.assertEquals(inventoryAction.getCartItemCount(), "1", "Should have 1 item");
+
+        // Thêm lại
+        inventoryAction.addToCartByProductName(product1);
+        WaitUtils.sleep(1);
+        //Kiểm tra số lượng sản phẩm trong giỏ hàng (hiển thị trên bagde)
+        Assert.assertEquals(inventoryAction.getCartItemCount(), "2", "Should have 2 items again");
+
+        // Xóa hết
+        inventoryAction.removeFromCartByProductName(product1);
+        inventoryAction.removeFromCartByProductName(product2);
+        WaitUtils.sleep(1);
+        //Kiểm tra số lượng sản phẩm trong giỏ hàng (hiển thị trên bagde)
+        Assert.assertEquals(inventoryAction.getCartItemCount(), "0", "Should be empty");
+    }
+
+    @Test
+    public void Inventory15_VerifyBurgerMenuOpens() {
+        ExtentReportManager.createTest("Inventory15_VerifyBurgerMenuOpens");
+
+        // Mở menu
+        inventoryAction.openMenu();
+
+        // Kiểm tra các link trong menu hiển thị
+        Assert.assertTrue(WaitUtils.isElementPresent(driver, InventoryPageUI.ALL_ITEMS_LINK),
+                "All Items link should be displayed");
+        Assert.assertTrue(WaitUtils.isElementPresent(driver, InventoryPageUI.ABOUT_LINK),
+                "About link should be displayed");
+        Assert.assertTrue(WaitUtils.isElementPresent(driver, InventoryPageUI.LOGOUT_LINK),
+                "Logout link should be displayed");
+        Assert.assertTrue(WaitUtils.isElementPresent(driver, InventoryPageUI.RESET_APP_STATE),
+                "Reset App State link should be displayed");
+    }
+
+    @Test
+    public void Inventory16_VerifySortPersistence() {
+        ExtentReportManager.createTest("Inventory16_VerifySortPersistence");
+
+        // Sort Z to A
+        inventoryAction.sortProductsBy("za");
+        List<String> firstSort = inventoryAction.getAllProductNames();
+
+        // Vào cart rồi quay lại
+        inventoryAction.goToCart();
+        WaitUtils.sleep(1);
+        driver.navigate().back();
+        WaitUtils.sleep(1);
+
+        // Sort vẫn giữ nguyên Z to A
+        List<String> afterBack = inventoryAction.getAllProductNames();
+        Assert.assertEquals(afterBack, firstSort, "Sort should persist after navigation");
+    }
+
+    @Test
+    public void Inventory17_AddSameProductTwice() {
+        ExtentReportManager.createTest("Inventory17_AddSameProductTwice");
+
+        String product = "Sauce Labs Backpack";
+
+        inventoryAction.addToCartByProductName(product);
+        WaitUtils.sleep(1);
+        Assert.assertEquals(inventoryAction.getCartItemCount(), "1", "Badge = 1");
+
+        // Nút Add đã chuyển thành Remove -> không thể add lần 2
+        // Kiểm tra nút Add không còn
+        Assert.assertFalse(inventoryAction.isAddToCartButtonDisplayed(product),
+                "Add button should be hidden after adding");
+    }
+
+    @Test
+    public void Inventory18_VerifySortPersistsAfterAddToCart() {
+        ExtentReportManager.createTest("Inventory18_VerifySortPersistsAfterAddToCart");
+
+        inventoryAction.sortProductsBy("hilo");
+        WaitUtils.sleep(1);
+        List<Double> before = inventoryAction.getAllProductPrices();
+
+        // Thêm sản phẩm
+        inventoryAction.addToCartByProductName("Sauce Labs Backpack");
+        WaitUtils.sleep(1);
+
+        List<Double> after = inventoryAction.getAllProductPrices();
+        Assert.assertEquals(after, before, "Sort should persist after adding product");
+    }
+
+    @Test
+    public void Inventory19_ClickProductNameOpensDetail() {
+        ExtentReportManager.createTest("Inventory19_ClickProductNameOpensDetail");
+
+        String product = "Sauce Labs Backpack";
+        inventoryAction.goToProductDetailByName(product);
+        WaitUtils.sleep(1);
+
+        Assert.assertTrue(driver.getCurrentUrl().contains("inventory-item.html"),
+                "Should navigate to product detail page");
+    }
+
+    @Test
+    public void Inventory20_CannotAccessWithoutLogin() {
+        ExtentReportManager.createTest("Inventory20_CannotAccessWithoutLogin");
+
+        // Logout trước
+        inventoryAction.logout();
+        WaitUtils.sleep(1);
+
+        // Thử truy cập thẳng vào inventory
+        driver.get("https://www.saucedemo.com/inventory.html");
+        WaitUtils.sleep(1);
+
+        // Bị redirect về trang login
+        Assert.assertTrue(driver.getCurrentUrl().equals("https://www.saucedemo.com/"),
+                "Should redirect to login page");
+    }
 
 }

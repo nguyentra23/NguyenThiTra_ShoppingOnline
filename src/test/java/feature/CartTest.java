@@ -218,4 +218,19 @@ public class CartTest extends Hook {
         Assert.assertTrue(cartAction.isProductInCart("Sauce Labs Backpack"), "Backpack should still be in cart");
         Assert.assertTrue(cartAction.isProductInCart("Sauce Labs Bike Light"), "Bike Light should still be in cart");
     }
+
+    @Test
+    public void Cart09_ClickProductNameInCartOpensDetail() {
+        ExtentReportManager.createTest("Cart09_ClickProductNameInCartOpensDetail");
+
+        String product = "Sauce Labs Backpack";
+        cartAction.goToProductDetailByNameFromCart(product);
+        WaitUtils.sleep(1);
+
+        // Kiểm tra chuyển sang trang chi tiết
+        Assert.assertTrue(driver.getCurrentUrl().contains("inventory-item"),
+                "Should navigate to product detail page");
+    }
+
+
 }

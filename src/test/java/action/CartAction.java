@@ -1,6 +1,7 @@
 package action;
 
 import ui.CartPageUI;
+import ui.InventoryPageUI;
 import utils.WaitUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -123,6 +124,13 @@ public class CartAction {
     public boolean isRemoveButtonDisplayedInCart(String productName) {
         String xpath = String.format(CartPageUI.REMOVE_BUTTON_CART, productName);  // Đã sửa
         return WaitUtils.isElementPresent(driver, By.xpath(xpath));
+    }
+
+    // Chuyển đến trang chi tiết sản phẩm theo tên
+    public void goToProductDetailByNameFromCart(String productName) {
+        String xpath = String.format(CartPageUI.PRODUCT_NAME_BY_PRODUCT, productName);
+        WaitUtils.click(driver, By.xpath(xpath));
+        WaitUtils.sleep(1);
     }
 
 }

@@ -169,4 +169,26 @@ public class LoginTest extends Hook {
         Assert.assertTrue(loginAction.getErrorMessage().contains("Username is required"), "Error message is not match");
     }
 
+    @Test
+    public void Login08_LoginFailWithLockedOutUser() {
+        ExtentReportManager.createTest("Login08_LoginFailWithLockedOutUser");
+        LoginAction loginAction = new LoginAction(driver);
+
+        // Đăng nhập
+        loginAction.performLogin("locked_out_user", "secret_sauce");
+
+        // Kiểm tra URL sau khi login thất bại
+        Assert.assertEquals(loginAction.getCurrentUrl(), "https://www.saucedemo.com/", "Test failed - URL incorrect!");
+
+        // Kiểm tra logo sau khi login thất bại
+        WebElement loginLogo = WaitUtils.waitForVisible(driver, LoginPageUI.LOGIN_LOGO);
+        Assert.assertTrue(loginLogo.isDisplayed(), "Login logo is not displayed!");
+
+        // Kiểm tra có hiển thị message lỗi
+        Assert.assertTrue(loginAction.isErrorMessageDisplayed(),"Error message is NOT displayed");
+
+        //Kiểm tra message lỗi có hiển thị đúng không
+        Assert.assertTrue(loginAction.getErrorMessage().contains("Epic sadface: Sorry, this user has been locked out."), "Error message is not match");
+    }
+
 }

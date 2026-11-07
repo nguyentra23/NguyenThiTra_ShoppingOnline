@@ -37,4 +37,7 @@ public class InventoryPageUI {
 
     // Dynamic XPath - Sản phẩm theo tên
     public static final String PRODUCT_ITEM_BY_NAME = "//div[@class='inventory_item' and contains(.,'%s')]";
+
+    public static final String PRODUCT_NAME_BY_PRODUCT ="//div[contains(@class,'inventory_item_name') and contains(.,'%s')]";
 }
+
